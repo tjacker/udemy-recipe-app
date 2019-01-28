@@ -1,2 +1,14 @@
 /* You can add global styles to this file, and also import other style files */
 /* Bootstrap html root value for rem units it 10px - base ten */
+body {
+  font-family: 'Lato', sans-serif;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-weight: 700;
+}
