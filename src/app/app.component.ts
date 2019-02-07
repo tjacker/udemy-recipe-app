@@ -6,5 +6,9 @@ import { Component } from '@angular/core';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  title = 'udemy-recipe-app';
+  link: string = 'recipes';
+
+  onNavigate(link: string) {
+    this.link = link;
+  }
 }
