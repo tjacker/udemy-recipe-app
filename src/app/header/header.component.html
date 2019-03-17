@@ -12,14 +12,14 @@
         <span class="icon-bar"></span> <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a href="#noop" class="navbar-brand">Recipe Book</a>
+      <a routerLink="/" class="navbar-brand">Recipe Book</a>
     </div>
 
     <div class="collapse navbar-collapse" id="navbar-collapse-1">
       <ul class="nav navbar-nav">
-        <li><a href="#noop" (click)="onSelect('recipes')">Recipes</a></li>
-        <li>
-          <a href="#noop" (click)="onSelect('shopping-list')">Shopping List</a>
+        <li routerLinkActive="active"><a routerLink="/recipes">Recipes</a></li>
+        <li routerLinkActive="active">
+          <a routerLink="/shopping-list">Shopping List</a>
         </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
