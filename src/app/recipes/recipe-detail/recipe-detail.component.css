@@ -5,3 +5,13 @@ img {
 a {
   cursor: pointer;
 }
+
+p {
+  font-size: 1.6rem;
+  line-height: 1;
+  margin-bottom: 2rem;
+}
+
+ul {
+  margin-top: 2rem;
+}
