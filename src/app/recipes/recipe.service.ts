@@ -17,6 +17,12 @@ export class RecipeService {
         new Ingredient('Dry rub spices', 1),
         new Ingredient('Tomatoes', 2)
       ]
+    ),
+    new Recipe(
+      'Beef Stew',
+      'Slow cooker beef stew',
+      'https://www.simplyrecipes.com/wp-content/uploads/2013/03/slow-cooker-guinness-stew-horiz-a-1200.jpg',
+      [new Ingredient('Stew beef', 1), new Ingredient('Potatoes', 3), new Ingredient('Carrots', 2)]
     )
   ];
 
