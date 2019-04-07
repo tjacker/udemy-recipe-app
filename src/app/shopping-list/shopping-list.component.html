@@ -2,10 +2,14 @@
   <div class="col-xs-10">
     <app-shopping-edit></app-shopping-edit>
     <hr />
-    <ul class="list-group">
-      <li class="list-group-item" *ngFor="let ingredient of ingredients">
-        <a href="#noop">{{ ingredient.name }} ({{ ingredient.amount }})</a>
-      </li>
-    </ul>
+    <div class="list-group">
+      <a
+        class="list-group-item"
+        *ngFor="let ingredient of ingredients; let i = index"
+        (click)="onEditItem(i)"
+      >
+        {{ ingredient.name }} ({{ ingredient.amount }})
+      </a>
+    </div>
   </div>
 </div>
