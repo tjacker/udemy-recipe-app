@@ -1,4 +1,4 @@
 {
   "editor.formatOnSave": true,
-  "cSpell.ignoreWords": ["dropdown", "injectable"]
+  "cSpell.ignoreWords": ["dropdown", "injectable", "validators"]
 }
