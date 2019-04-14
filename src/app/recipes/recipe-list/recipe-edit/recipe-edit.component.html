@@ -51,6 +51,7 @@
       </div>
       <div class="row">
         <div class="col-xs-12" formArrayName="ingredients">
+          <label>Ingredients</label>
           <div
             class="row ingredients-list-group"
             *ngFor="let ingredientCtrl of getControls(); let i = index"
@@ -66,6 +67,13 @@
               <button type="button" class="btn btn-danger">X</button>
             </div>
           </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-xs-12">
+          <button type="button" class="btn btn-success" (click)="onAddIngredient()">
+            Add Ingredient
+          </button>
         </div>
       </div>
     </form>
