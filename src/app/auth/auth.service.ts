@@ -10,4 +10,11 @@ export class AuthService {
       .createUserWithEmailAndPassword(email, password)
       .catch(error => console.warn(error));
   }
+
+  signinUser(email: string, password: string) {
+    firebase
+      .auth()
+      .signInWithEmailAndPassword(email, password)
+      .catch(error => console.warn(error));
+  }
 }
