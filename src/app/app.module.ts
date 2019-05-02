@@ -14,13 +14,14 @@ import { ShoppingListComponent } from './shopping-list/shopping-list.component';
 import { ShoppingEditComponent } from './shopping-list/shopping-edit/shopping-edit.component';
 import { RecipeStartComponent } from './recipes/recipe-list/recipe-start/recipe-start.component';
 import { RecipeEditComponent } from './recipes/recipe-list/recipe-edit/recipe-edit.component';
+import { SignupComponent } from './auth/signup/signup.component';
+import { SigninComponent } from './auth/signin/signin.component';
 import { DropdownDirective } from './shared/dropdown.directive';
 
 import { ShoppingListService } from './shopping-list/shopping-list.service';
 import { RecipeService } from './recipes/recipe.service';
 import { DataService } from './shared/data.service';
-import { SignupComponent } from './auth/signup/signup.component';
-import { SigninComponent } from './auth/signin/signin.component';
+import { AuthService } from './auth/auth.service';
 
 @NgModule({
   declarations: [
@@ -39,7 +40,7 @@ import { SigninComponent } from './auth/signin/signin.component';
     SigninComponent
   ],
   imports: [BrowserModule, FormsModule, ReactiveFormsModule, AppRoutingModule, HttpModule],
-  providers: [ShoppingListService, RecipeService, DataService],
+  providers: [ShoppingListService, RecipeService, DataService, AuthService],
   bootstrap: [AppComponent]
 })
 export class AppModule {}
