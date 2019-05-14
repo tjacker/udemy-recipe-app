@@ -1,3 +1,7 @@
 .row > div {
   margin-top: 4rem;
 }
+
+form {
+  margin-bottom: 4rem;
+}

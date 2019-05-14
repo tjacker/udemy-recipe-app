@@ -3,6 +3,7 @@
   "cSpell.ignoreWords": ["injectable", "validators"],
   "cSpell.words": [
     "dropdown",
+    "minlength",
     "signin",
     "signup"
   ]

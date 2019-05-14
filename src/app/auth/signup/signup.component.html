@@ -12,11 +12,18 @@
           type="password"
           id="password"
           name="password"
+          minlength="6"
           required
           ngModel
+          #password="ngModel"
         />
       </div>
       <button type="submit" class="btn btn-primary" [disabled]="!f.valid">Sign Up</button>
     </form>
+    <div *ngIf="password.invalid && (password.dirty || password.touched)">
+      <div class="alert alert-danger" *ngIf="password.errors.minlength">
+        <p>Passwords must be at least 6 characters.</p>
+      </div>
+    </div>
   </div>
 </div>
