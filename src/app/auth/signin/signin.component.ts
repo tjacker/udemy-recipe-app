@@ -16,6 +16,7 @@ export class SigninComponent implements OnInit {
   onSignin(form: NgForm) {
     const email = form.value.email;
     const password = form.value.password;
+    // Firebase will automatically store token in indexedDB
     this.authService.signinUser(email, password);
     form.reset();
   }
