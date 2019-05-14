@@ -23,7 +23,7 @@ const appRoutes: Routes = [
   },
   { path: 'shopping-list', component: ShoppingListComponent },
   { path: 'signup', component: SignupComponent },
-  { path: 'login', component: SigninComponent }
+  { path: 'signin', component: SigninComponent }
 ];
 
 @NgModule({
