@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { Response } from '@angular/http';
 
 import { DataService } from '../shared/data.service';
-import { RecipeService } from '../recipes/recipe.service';
+import { AuthService } from '../auth/auth.service';
 
 @Component({
   selector: 'app-header',
@@ -10,7 +10,7 @@ import { RecipeService } from '../recipes/recipe.service';
   styleUrls: ['./header.component.css']
 })
 export class HeaderComponent {
-  constructor(private dataService: DataService, private recipeService: RecipeService) {}
+  constructor(private dataService: DataService, private authService: AuthService) {}
 
   onSaveData() {
     this.dataService.storeRecipes().subscribe((response: Response) => {
