@@ -10,13 +10,7 @@ import { environment } from './../environments/environment';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit {
-  link: string = 'recipes';
-
   ngOnInit() {
     firebase.initializeApp(environment.firebaseConfig);
-  }
-
-  onNavigate(link: string) {
-    this.link = link;
   }
 }
