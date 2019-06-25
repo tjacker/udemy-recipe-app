@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { Response } from '@angular/http';
 import { Router } from '@angular/router';
 
 import { DataService } from '../shared/data.service';
@@ -18,9 +17,7 @@ export class HeaderComponent {
   ) {}
 
   onSaveData() {
-    this.dataService.storeRecipes().subscribe((response: Response) => {
-      console.log(response);
-    });
+    this.dataService.storeRecipes();
   }
 
   onFetchData() {
