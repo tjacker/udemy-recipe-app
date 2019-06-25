@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { Response } from '@angular/http';
 import { HttpClient } from '@angular/common/http';
 import { map } from 'rxjs/operators';
 
@@ -21,32 +20,24 @@ export class DataService {
   storeRecipes() {
     const token = this.authService.getToken();
     // recipes.json is added to the URL to prevent CORS errors
-    this.http
-      .put(this.url + token, this.recipeService.getRecipes())
-      .subscribe((response: Response) => {
-        console.log(response);
-      });
+    this.http.put(this.url + token, this.recipeService.getRecipes()).subscribe(response => {
+      console.log(response);
+    });
   }
 
   fetchRecipes() {
     const token = this.authService.getToken();
     this.http
-      .get(this.url + token)
+      .get<Recipe[]>(this.url + token)
       .pipe(
-        map((response: Response) => {
-          // FIXME: change to correct type
-          const recipes: Recipe[] = response;
-
-          for (let recipe of recipes) {
-            if (!recipe['ingredients']) {
-              console.log(recipe);
-              recipe['ingredients'] = [];
-            }
-          }
-          return recipes;
+        // First map is the rxjs operator; second is array method
+        map(recipes => {
+          return recipes.map(recipe => {
+            return { ...recipe, ingredients: recipe.ingredients ? recipe.ingredients : [] };
+          });
         })
       )
-      .subscribe((recipes: Recipe[]) => {
+      .subscribe(recipes => {
         this.recipeService.setRecipes(recipes);
       });
   }
