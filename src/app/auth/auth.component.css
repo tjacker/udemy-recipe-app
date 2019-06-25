@@ -1,0 +1,19 @@
+.row > div {
+  margin-top: 4rem;
+}
+
+button + button {
+  margin-left: 1.5rem;
+}
+
+[type='submit'] {
+  width: 80px;
+}
+
+.btn-primary {
+  width: 140px;
+}
+
+.alert {
+  margin-top: 2rem;
+}

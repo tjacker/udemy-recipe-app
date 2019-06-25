@@ -1,19 +1,39 @@
 import { Injectable } from '@angular/core';
-import { Router } from '@angular/router';
+import { HttpClient } from '@angular/common/http';
 import * as firebase from 'firebase/app';
 import 'firebase/auth';
+import { environment } from 'src/environments/environment';
+
+interface AuthResponseData {
+  kind: string;
+  idToken: string;
+  email: string;
+  refreshToken: string;
+  expiresIn: string;
+  localId: string;
+}
 
 @Injectable()
 export class AuthService {
+  signupUrl = 'https://www.googleapis.com/identitytoolkit/v3/relyingparty/signupNewUser?key=';
   token: string;
 
-  constructor(private router: Router) {}
+  constructor(private http: HttpClient) {}
 
   signupUser(email: string, password: string) {
     firebase
       .auth()
       .createUserWithEmailAndPassword(email, password)
       .catch(error => console.warn(error));
+  }
+
+  signup(email: string, password: string) {
+    console.log(email, password, environment.apiKey);
+    return this.http.post<AuthResponseData>(this.signupUrl + environment.apiKey, {
+      email,
+      password,
+      returnSecureToken: true
+    });
   }
 
   signinUser(email: string, password: string) {
