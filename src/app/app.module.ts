@@ -16,6 +16,7 @@ import { RecipeStartComponent } from './recipes/recipe-list/recipe-start/recipe-
 import { RecipeEditComponent } from './recipes/recipe-list/recipe-edit/recipe-edit.component';
 import { AuthComponent } from './auth/auth.component';
 import { DropdownDirective } from './shared/dropdown.directive';
+import { LoadingIndicatorComponent } from './shared/loading-indicator/loading-indicator.component';
 
 import { ShoppingListService } from './shopping-list/shopping-list.service';
 import { RecipeService } from './recipes/recipe.service';
@@ -34,10 +35,11 @@ import { AuthGuard } from './auth/auth-guard.service';
     RecipeItemComponent,
     ShoppingListComponent,
     ShoppingEditComponent,
-    DropdownDirective,
     RecipeStartComponent,
     RecipeEditComponent,
-    AuthComponent
+    AuthComponent,
+    DropdownDirective,
+    LoadingIndicatorComponent
   ],
   imports: [BrowserModule, FormsModule, ReactiveFormsModule, HttpClientModule, AppRoutingModule],
   providers: [

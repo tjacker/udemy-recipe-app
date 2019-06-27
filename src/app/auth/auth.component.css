@@ -17,3 +17,7 @@ button + button {
 .alert {
   margin-top: 2rem;
 }
+
+.loading-indicator {
+  text-align: center;
+}

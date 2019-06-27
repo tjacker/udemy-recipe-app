@@ -17,6 +17,8 @@ interface AuthResponseData {
 export class AuthService {
   signupUrl = 'https://www.googleapis.com/identitytoolkit/v3/relyingparty/signupNewUser?key=';
   token: string;
+  // FIXME: remove this after refactoring
+  router: any;
 
   constructor(private http: HttpClient) {}
 
