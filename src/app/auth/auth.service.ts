@@ -1,7 +1,10 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { catchError } from 'rxjs/operators';
+import { throwError } from 'rxjs';
 import * as firebase from 'firebase/app';
 import 'firebase/auth';
+
 import { environment } from 'src/environments/environment';
 
 interface AuthResponseData {
@@ -31,11 +34,28 @@ export class AuthService {
 
   signup(email: string, password: string) {
     console.log(email, password, environment.apiKey);
-    return this.http.post<AuthResponseData>(this.signupUrl + environment.apiKey, {
-      email,
-      password,
-      returnSecureToken: true
-    });
+    return this.http
+      .post<AuthResponseData>(this.signupUrl + environment.apiKey, {
+        email,
+        password,
+        returnSecureToken: true
+      })
+      .pipe(
+        catchError(response => {
+          let errorMessage = 'An unknown error occurred.';
+
+          if (!response.error || !response.error.error) {
+            return throwError(errorMessage);
+          }
+
+          switch (response.error.error.message) {
+            case 'EMAIL_EXISTS':
+              errorMessage = 'This email already exists.';
+          }
+
+          return throwError(errorMessage);
+        })
+      );
   }
 
   signinUser(email: string, password: string) {
