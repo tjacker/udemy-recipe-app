@@ -1,5 +1,4 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 
 import { DataService } from '../shared/data.service';
@@ -14,11 +13,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   private userSubscription: Subscription;
   isAuthenticated = false;
 
-  constructor(
-    private dataService: DataService,
-    private authService: AuthService,
-    private router: Router
-  ) {}
+  constructor(private dataService: DataService, private authService: AuthService) {}
 
   ngOnInit() {
     this.userSubscription = this.authService.user.subscribe(user => {
@@ -35,7 +30,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
   onLogout() {
-    this.router.navigate(['/signin']);
     this.authService.logout();
   }
 

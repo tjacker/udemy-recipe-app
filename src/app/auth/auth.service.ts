@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { Router } from '@angular/router';
 import { catchError, tap } from 'rxjs/operators';
 import { throwError, BehaviorSubject } from 'rxjs';
 import * as firebase from 'firebase/app';
@@ -25,10 +26,8 @@ export class AuthService {
   signinURL = 'https://www.googleapis.com/identitytoolkit/v3/relyingparty/verifyPassword?key=';
   user = new BehaviorSubject<User>(null);
   token: string;
-  // FIXME: remove this after refactoring
-  router: any;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private router: Router) {}
 
   signupUser(email: string, password: string) {
     firebase
@@ -98,8 +97,8 @@ export class AuthService {
   }
 
   logout() {
-    firebase.auth().signOut;
-    this.token = null;
+    this.user.next(null);
+    this.router.navigate(['/auth']);
   }
 
   getToken() {
