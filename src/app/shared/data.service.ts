@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { map, tap } from 'rxjs/operators';
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { map, tap, take, exhaustMap } from 'rxjs/operators';
 
 import { RecipeService } from '../recipes/recipe.service';
 import { Recipe } from '../recipes/recipe.model';
@@ -9,7 +9,7 @@ import { AuthService } from '../auth/auth.service';
 @Injectable()
 // @Injectable({providedIn: 'root'}) // Newer option that doesn't require updating app.module.ts
 export class DataService {
-  url: string = 'https://udemy-recipe-app-595f4.firebaseio.com/recipes.json?auth=';
+  url: string = 'https://udemy-recipe-app-25862.firebaseio.com/recipes.json';
 
   constructor(
     private http: HttpClient,
@@ -26,8 +26,15 @@ export class DataService {
   }
 
   fetchRecipes() {
-    const token = this.authService.getToken();
-    return this.http.get<Recipe[]>(this.url + token).pipe(
+    // Gets value once and immediately unsubscribes
+    // exhaustMap waits for first user observable to complete
+    return this.authService.user.pipe(
+      take(1),
+      exhaustMap(user => {
+        return this.http.get<Recipe[]>(this.url, {
+          params: new HttpParams().set('auth', user.token)
+        });
+      }),
       // First map is the rxjs operator; second is array method
       map(recipes => {
         return recipes.map(recipe => {

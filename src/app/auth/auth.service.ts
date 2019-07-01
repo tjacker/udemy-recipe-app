@@ -1,13 +1,12 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { catchError, tap } from 'rxjs/operators';
-import { throwError, Subject } from 'rxjs';
+import { throwError, BehaviorSubject } from 'rxjs';
 import * as firebase from 'firebase/app';
 import 'firebase/auth';
 
 import { environment } from 'src/environments/environment';
 import { User } from './user.model';
-import { identifierModuleUrl } from '@angular/compiler';
 
 export interface AuthResponseData {
   kind: string;
@@ -24,7 +23,7 @@ export interface AuthResponseData {
 export class AuthService {
   signupUrl = 'https://www.googleapis.com/identitytoolkit/v3/relyingparty/signupNewUser?key=';
   signinURL = 'https://www.googleapis.com/identitytoolkit/v3/relyingparty/verifyPassword?key=';
-  user = new Subject<User>();
+  user = new BehaviorSubject<User>(null);
   token: string;
   // FIXME: remove this after refactoring
   router: any;
