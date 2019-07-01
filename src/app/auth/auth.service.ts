@@ -1,11 +1,13 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { catchError } from 'rxjs/operators';
-import { throwError } from 'rxjs';
+import { catchError, tap } from 'rxjs/operators';
+import { throwError, Subject } from 'rxjs';
 import * as firebase from 'firebase/app';
 import 'firebase/auth';
 
 import { environment } from 'src/environments/environment';
+import { User } from './user.model';
+import { identifierModuleUrl } from '@angular/compiler';
 
 export interface AuthResponseData {
   kind: string;
@@ -22,6 +24,7 @@ export interface AuthResponseData {
 export class AuthService {
   signupUrl = 'https://www.googleapis.com/identitytoolkit/v3/relyingparty/signupNewUser?key=';
   signinURL = 'https://www.googleapis.com/identitytoolkit/v3/relyingparty/verifyPassword?key=';
+  user = new Subject<User>();
   token: string;
   // FIXME: remove this after refactoring
   router: any;
@@ -45,7 +48,18 @@ export class AuthService {
         })
         // Same as .pipe(catchError(response => this.handleError(response)));
         // The returned response is automatically passed to referenced function
-        .pipe(catchError(this.handleError))
+        .pipe(
+          catchError(this.handleError),
+          tap(response => {
+            this.handleAuthentication(
+              response.localId,
+              response.email,
+              response.idToken,
+              // Convert string to number
+              +response.expiresIn
+            );
+          })
+        )
     );
   }
 
@@ -70,7 +84,18 @@ export class AuthService {
         password,
         returnSecureToken: true
       })
-      .pipe(catchError(this.handleError));
+      .pipe(
+        catchError(this.handleError),
+        tap(response => {
+          this.handleAuthentication(
+            response.localId,
+            response.email,
+            response.idToken,
+            // Convert string to number
+            +response.expiresIn
+          );
+        })
+      );
   }
 
   logout() {
@@ -89,6 +114,13 @@ export class AuthService {
 
   isAuthenticated() {
     return this.token != null;
+  }
+
+  private handleAuthentication(id: string, email: string, token: string, expiresIn: number) {
+    const expirationDate = new Date(new Date().getTime() + expiresIn * 1000),
+      user = new User(id, email, token, expirationDate);
+
+    this.user.next(user);
   }
 
   private handleError(response: HttpErrorResponse) {
