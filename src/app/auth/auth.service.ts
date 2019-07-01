@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { catchError } from 'rxjs/operators';
 import { throwError } from 'rxjs';
 import * as firebase from 'firebase/app';
@@ -7,18 +7,21 @@ import 'firebase/auth';
 
 import { environment } from 'src/environments/environment';
 
-interface AuthResponseData {
+export interface AuthResponseData {
   kind: string;
   idToken: string;
   email: string;
   refreshToken: string;
   expiresIn: string;
   localId: string;
+  // Returned from signin response, but not signup
+  registered?: boolean;
 }
 
 @Injectable()
 export class AuthService {
   signupUrl = 'https://www.googleapis.com/identitytoolkit/v3/relyingparty/signupNewUser?key=';
+  signinURL = 'https://www.googleapis.com/identitytoolkit/v3/relyingparty/verifyPassword?key=';
   token: string;
   // FIXME: remove this after refactoring
   router: any;
@@ -33,29 +36,17 @@ export class AuthService {
   }
 
   signup(email: string, password: string) {
-    console.log(email, password, environment.apiKey);
-    return this.http
-      .post<AuthResponseData>(this.signupUrl + environment.apiKey, {
-        email,
-        password,
-        returnSecureToken: true
-      })
-      .pipe(
-        catchError(response => {
-          let errorMessage = 'An unknown error occurred.';
-
-          if (!response.error || !response.error.error) {
-            return throwError(errorMessage);
-          }
-
-          switch (response.error.error.message) {
-            case 'EMAIL_EXISTS':
-              errorMessage = 'This email already exists.';
-          }
-
-          return throwError(errorMessage);
+    return (
+      this.http
+        .post<AuthResponseData>(this.signupUrl + environment.apiKey, {
+          email,
+          password,
+          returnSecureToken: true
         })
-      );
+        // Same as .pipe(catchError(response => this.handleError(response)));
+        // The returned response is automatically passed to referenced function
+        .pipe(catchError(this.handleError))
+    );
   }
 
   signinUser(email: string, password: string) {
@@ -70,6 +61,16 @@ export class AuthService {
           .then((token: string) => (this.token = token));
       })
       .catch(error => console.warn(error));
+  }
+
+  signin(email: string, password: string) {
+    return this.http
+      .post<AuthResponseData>(this.signinURL + environment.apiKey, {
+        email,
+        password,
+        returnSecureToken: true
+      })
+      .pipe(catchError(this.handleError));
   }
 
   logout() {
@@ -88,5 +89,27 @@ export class AuthService {
 
   isAuthenticated() {
     return this.token != null;
+  }
+
+  private handleError(response: HttpErrorResponse) {
+    let errorMessage = 'An unknown error occurred.';
+
+    if (!response.error || !response.error.error) {
+      return throwError(errorMessage);
+    }
+
+    switch (response.error.error.message) {
+      case 'EMAIL_EXISTS':
+        errorMessage = 'This email already exists.';
+        break;
+      case 'EMAIL_NOT_FOUND':
+        errorMessage = 'Email address does not exist.';
+        break;
+      case 'INVALID_PASSWORD':
+        errorMessage = 'The password entered was incorrect.';
+        break;
+    }
+
+    return throwError(errorMessage);
   }
 }
