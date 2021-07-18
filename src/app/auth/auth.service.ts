@@ -1,13 +1,13 @@
-import { Injectable } from "@angular/core";
-import { HttpClient, HttpErrorResponse } from "@angular/common/http";
-import { Router } from "@angular/router";
-import { catchError, tap } from "rxjs/operators";
-import { throwError, BehaviorSubject } from "rxjs";
-import firebase from "firebase/app";
-import "firebase/auth";
+import { Injectable } from '@angular/core';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { Router } from '@angular/router';
+import { catchError, tap } from 'rxjs/operators';
+import { throwError, BehaviorSubject } from 'rxjs';
+import firebase from 'firebase/app';
+import 'firebase/auth';
 
-import { environment } from "src/environments/environment";
-import { User } from "./user.model";
+import { environment } from 'src/environments/environment';
+import { User } from './user.model';
 
 export interface AuthResponseData {
   kind: string;
@@ -22,10 +22,8 @@ export interface AuthResponseData {
 
 @Injectable()
 export class AuthService {
-  signupUrl =
-    "https://www.googleapis.com/identitytoolkit/v3/relyingparty/signupNewUser?key=";
-  signinURL =
-    "https://www.googleapis.com/identitytoolkit/v3/relyingparty/verifyPassword?key=";
+  signupUrl = 'https://www.googleapis.com/identitytoolkit/v3/relyingparty/signupNewUser?key=';
+  signinURL = 'https://www.googleapis.com/identitytoolkit/v3/relyingparty/verifyPassword?key=';
   user = new BehaviorSubject<User>(null);
   token: string;
 
@@ -35,7 +33,7 @@ export class AuthService {
     firebase
       .auth()
       .createUserWithEmailAndPassword(email, password)
-      .catch((error) => console.warn(error));
+      .catch(error => console.warn(error));
   }
 
   signup(email: string, password: string) {
@@ -44,13 +42,13 @@ export class AuthService {
         .post<AuthResponseData>(this.signupUrl + environment.apiKey, {
           email,
           password,
-          returnSecureToken: true,
+          returnSecureToken: true
         })
         // Same as .pipe(catchError(response => this.handleError(response)));
         // The returned response is automatically passed to referenced function
         .pipe(
           catchError(this.handleError),
-          tap((response) => {
+          tap(response => {
             this.handleAuthentication(
               response.localId,
               response.email,
@@ -67,14 +65,14 @@ export class AuthService {
     firebase
       .auth()
       .signInWithEmailAndPassword(email, password)
-      .then((response) => {
-        this.router.navigate(["/"]);
+      .then(response => {
+        this.router.navigate(['/']);
         firebase
           .auth()
           .currentUser.getIdToken()
           .then((token: string) => (this.token = token));
       })
-      .catch((error) => console.warn(error));
+      .catch(error => console.warn(error));
   }
 
   signin(email: string, password: string) {
@@ -82,11 +80,11 @@ export class AuthService {
       .post<AuthResponseData>(this.signinURL + environment.apiKey, {
         email,
         password,
-        returnSecureToken: true,
+        returnSecureToken: true
       })
       .pipe(
         catchError(this.handleError),
-        tap((response) => {
+        tap(response => {
           this.handleAuthentication(
             response.localId,
             response.email,
@@ -100,7 +98,7 @@ export class AuthService {
 
   logout() {
     this.user.next(null);
-    this.router.navigate(["/auth"]);
+    this.router.navigate(['/auth']);
   }
 
   getToken() {
@@ -116,12 +114,7 @@ export class AuthService {
     return this.token != null;
   }
 
-  private handleAuthentication(
-    id: string,
-    email: string,
-    token: string,
-    expiresIn: number
-  ) {
+  private handleAuthentication(id: string, email: string, token: string, expiresIn: number) {
     const expirationDate = new Date(new Date().getTime() + expiresIn * 1000),
       user = new User(id, email, token, expirationDate);
 
@@ -129,21 +122,21 @@ export class AuthService {
   }
 
   private handleError(response: HttpErrorResponse) {
-    let errorMessage = "An unknown error occurred.";
+    let errorMessage = 'An unknown error occurred.';
 
     if (!response.error || !response.error.error) {
       return throwError(errorMessage);
     }
 
     switch (response.error.error.message) {
-      case "EMAIL_EXISTS":
-        errorMessage = "This email already exists.";
+      case 'EMAIL_EXISTS':
+        errorMessage = 'This email already exists.';
         break;
-      case "EMAIL_NOT_FOUND":
-        errorMessage = "Email address does not exist.";
+      case 'EMAIL_NOT_FOUND':
+        errorMessage = 'Email address does not exist.';
         break;
-      case "INVALID_PASSWORD":
-        errorMessage = "The password entered was incorrect.";
+      case 'INVALID_PASSWORD':
+        errorMessage = 'The password entered was incorrect.';
         break;
     }
 

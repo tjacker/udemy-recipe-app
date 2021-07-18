@@ -1,32 +1,32 @@
-import { BrowserModule } from "@angular/platform-browser";
-import { NgModule } from "@angular/core";
-import { FormsModule, ReactiveFormsModule } from "@angular/forms";
-import { HttpClientModule, HTTP_INTERCEPTORS } from "@angular/common/http";
+import { BrowserModule } from '@angular/platform-browser';
+import { NgModule } from '@angular/core';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 
-import { AppRoutingModule } from "./app-routing.module";
-import { AppComponent } from "./app.component";
-import { HeaderComponent } from "./header/header.component";
-import { RecipesComponent } from "./recipes/recipes.component";
-import { RecipeListComponent } from "./recipes/recipe-list/recipe-list.component";
-import { RecipeDetailComponent } from "./recipes/recipe-detail/recipe-detail.component";
-import { RecipeItemComponent } from "./recipes/recipe-list/recipe-item/recipe-item.component";
-import { ShoppingListComponent } from "./shopping-list/shopping-list.component";
-import { ShoppingEditComponent } from "./shopping-list/shopping-edit/shopping-edit.component";
-import { RecipeStartComponent } from "./recipes/recipe-list/recipe-start/recipe-start.component";
-import { RecipeEditComponent } from "./recipes/recipe-list/recipe-edit/recipe-edit.component";
-import { AuthComponent } from "./auth/auth.component";
-import { SigninComponent } from "./auth/signin/signin.component";
-import { SignupComponent } from "./auth/signup/signup.component";
-import { DropdownDirective } from "./shared/dropdown.directive";
-import { LoadingIndicatorComponent } from "./shared/loading-indicator/loading-indicator.component";
+import { AppRoutingModule } from './app-routing.module';
+import { AppComponent } from './app.component';
+import { HeaderComponent } from './header/header.component';
+import { RecipesComponent } from './recipes/recipes.component';
+import { RecipeListComponent } from './recipes/recipe-list/recipe-list.component';
+import { RecipeDetailComponent } from './recipes/recipe-detail/recipe-detail.component';
+import { RecipeItemComponent } from './recipes/recipe-list/recipe-item/recipe-item.component';
+import { ShoppingListComponent } from './shopping-list/shopping-list.component';
+import { ShoppingEditComponent } from './shopping-list/shopping-edit/shopping-edit.component';
+import { RecipeStartComponent } from './recipes/recipe-list/recipe-start/recipe-start.component';
+import { RecipeEditComponent } from './recipes/recipe-list/recipe-edit/recipe-edit.component';
+import { AuthComponent } from './auth/auth.component';
+import { SigninComponent } from './auth/signin/signin.component';
+import { SignupComponent } from './auth/signup/signup.component';
+import { DropdownDirective } from './shared/dropdown.directive';
+import { LoadingIndicatorComponent } from './shared/loading-indicator/loading-indicator.component';
 
-import { ShoppingListService } from "./shopping-list/shopping-list.service";
-import { RecipeService } from "./recipes/recipe.service";
-import { RecipesResolverService } from "./recipes/recipes-resolver.service";
-import { DataService } from "./shared/data.service";
-import { AuthService } from "./auth/auth.service";
-import { AuthGuard } from "./auth/auth-guard.service";
-import { AuthInterceptorService } from "./auth/auth-interceptor.service";
+import { ShoppingListService } from './shopping-list/shopping-list.service';
+import { RecipeService } from './recipes/recipe.service';
+import { RecipesResolverService } from './recipes/recipes-resolver.service';
+import { DataService } from './shared/data.service';
+import { AuthService } from './auth/auth.service';
+import { AuthGuard } from './auth/auth-guard.service';
+import { AuthInterceptorService } from './auth/auth-interceptor.service';
 
 @NgModule({
   declarations: [
@@ -44,15 +44,9 @@ import { AuthInterceptorService } from "./auth/auth-interceptor.service";
     SigninComponent,
     SignupComponent,
     DropdownDirective,
-    LoadingIndicatorComponent,
+    LoadingIndicatorComponent
   ],
-  imports: [
-    BrowserModule,
-    FormsModule,
-    ReactiveFormsModule,
-    HttpClientModule,
-    AppRoutingModule,
-  ],
+  imports: [BrowserModule, FormsModule, ReactiveFormsModule, HttpClientModule, AppRoutingModule],
   providers: [
     ShoppingListService,
     RecipeService,
@@ -63,9 +57,9 @@ import { AuthInterceptorService } from "./auth/auth-interceptor.service";
     {
       provide: HTTP_INTERCEPTORS,
       useClass: AuthInterceptorService,
-      multi: true,
-    },
+      multi: true
+    }
   ],
-  bootstrap: [AppComponent],
+  bootstrap: [AppComponent]
 })
 export class AppModule {}

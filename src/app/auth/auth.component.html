@@ -1,32 +1,55 @@
 <div class="row">
-	<div class="col-xs-12 col-sm-10 col-md-8 col-sm-offset-1 col-md-offset-2">
-		<div class="alert alert-danger" *ngIf="error">
-			<p>{{error}}</p>
-		</div>
-		<div class="loading-indicator" *ngIf="isLoading">
-			<app-loading-indicator></app-loading-indicator>
-		</div>
-		<form (ngSubmit)="onSubmit(authForm)" #authForm="ngForm" *ngIf="!isLoading">
-			<div class="form-group">
-				<label for="email">Email</label>
-				<input class="form-control" type="email" id="email" name="email" required ngModel email />
-			</div>
-			<div class="form-group">
-				<label for="password">Password</label>
-				<input class="form-control" type="password" id="password" name="password" minlength="6" required ngModel
-					#password="ngModel" />
-			</div>
-			<div>
-				<button type="submit" class="btn btn-success"
-					[disabled]="!authForm.valid">{{isLoginMode ? 'Log In' : 'Sign Up'}}</button>
-				<button type="button" class="btn btn-primary" (click)="onSwitchMode()">Switch to
-					{{isLoginMode ? 'Sign Up' : 'Log In'}}</button>
-			</div>
-			<div *ngIf="password.invalid && (password.dirty || password.touched) && !isLoginMode">
-				<div class="alert alert-danger" *ngIf="password.errors.minlength">
-					<p>Passwords must be at least 6 characters.</p>
-				</div>
-			</div>
-		</form>
-	</div>
+  <div class="col-xs-12 col-sm-10 col-md-8 col-sm-offset-1 col-md-offset-2">
+    <div class="alert alert-danger"
+      *ngIf="error">
+      <p>{{ error }}</p>
+    </div>
+    <div class="loading-indicator"
+      *ngIf="isLoading">
+      <app-loading-indicator></app-loading-indicator>
+    </div>
+    <form (ngSubmit)="onSubmit(authForm)"
+      #authForm="ngForm"
+      *ngIf="!isLoading">
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input class="form-control"
+          type="email"
+          id="email"
+          name="email"
+          required
+          ngModel
+          email />
+      </div>
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input class="form-control"
+          type="password"
+          id="password"
+          name="password"
+          minlength="6"
+          required
+          ngModel
+          #password="ngModel" />
+      </div>
+      <div>
+        <button type="submit"
+          class="btn btn-success"
+          [disabled]="!authForm.valid">
+          {{ isLoginMode ? 'Log In' : 'Sign Up' }}
+        </button>
+        <button type="button"
+          class="btn btn-primary"
+          (click)="onSwitchMode()">
+          Switch to {{ isLoginMode ? 'Sign Up' : 'Log In' }}
+        </button>
+      </div>
+      <div *ngIf="password.invalid && (password.dirty || password.touched) && !isLoginMode">
+        <div class="alert alert-danger"
+          *ngIf="password.errors.minlength">
+          <p>Passwords must be at least 6 characters.</p>
+        </div>
+      </div>
+    </form>
+  </div>
 </div>
