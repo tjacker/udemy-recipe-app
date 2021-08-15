@@ -20,11 +20,6 @@ import { SignupComponent } from './auth/signup/signup.component';
 import { DropdownDirective } from './shared/dropdown.directive';
 import { LoadingIndicatorComponent } from './shared/loading-indicator/loading-indicator.component';
 
-import { ShoppingListService } from './shopping-list/shopping-list.service';
-import { RecipeService } from './recipes/recipe.service';
-import { RecipesResolverService } from './recipes/recipes-resolver.service';
-import { DataService } from './shared/data.service';
-import { AuthService } from './auth/auth.service';
 import { AuthGuard } from './auth/auth-guard.service';
 import { AuthInterceptorService } from './auth/auth-interceptor.service';
 
@@ -48,11 +43,6 @@ import { AuthInterceptorService } from './auth/auth-interceptor.service';
   ],
   imports: [BrowserModule, FormsModule, ReactiveFormsModule, HttpClientModule, AppRoutingModule],
   providers: [
-    ShoppingListService,
-    RecipeService,
-    RecipesResolverService,
-    DataService,
-    AuthService,
     AuthGuard,
     {
       provide: HTTP_INTERCEPTORS,

@@ -6,8 +6,7 @@ import { RecipeService } from '../recipes/recipe.service';
 import { Recipe } from '../recipes/recipe.model';
 import { AuthService } from '../auth/auth.service';
 
-@Injectable()
-// @Injectable({providedIn: 'root'}) // Newer option that doesn't require updating app.module.ts
+@Injectable({ providedIn: 'root' })
 export class DataService {
   // recipes.json is added to the URL to prevent CORS errors
   url: string = 'https://udemy-recipe-app-25862.firebaseio.com/recipes.json';
