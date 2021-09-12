@@ -31,7 +31,7 @@ export class RecipeDetailComponent implements OnInit {
   }
 
   onEditRecipe() {
-    // Below is an example of how to construct the route using the id
+    // Below is an example of how to construct the route using the id by going up one level
     // this.router.navigate(['../', this.id, 'edit'], { relativeTo: this.route });
     this.router.navigate(['edit'], { relativeTo: this.route });
   }

@@ -11,7 +11,7 @@ import { RecipeService } from '../../recipe.service';
 })
 export class RecipeEditComponent implements OnInit {
   id: number;
-  editMode: boolean = false;
+  editMode = false;
   recipeForm: FormGroup;
 
   constructor(
@@ -60,10 +60,11 @@ export class RecipeEditComponent implements OnInit {
   }
 
   private initForm() {
-    let recipeName: string = '',
-      recipeImagePath: string = '',
-      recipeDescription: string = '',
-      recipeIngredients = new FormArray([]);
+    let recipeName = '',
+      recipeImagePath = '',
+      recipeDescription = '';
+
+    const recipeIngredients = new FormArray([]);
 
     if (this.editMode) {
       const recipe = this.recipeService.getRecipe(this.id);
@@ -73,7 +74,7 @@ export class RecipeEditComponent implements OnInit {
       recipeDescription = recipe.description;
 
       if (recipe['ingredients']) {
-        for (let ingredient of recipe.ingredients) {
+        for (const ingredient of recipe.ingredients) {
           recipeIngredients.push(
             new FormGroup({
               name: new FormControl(ingredient.name, Validators.required),
