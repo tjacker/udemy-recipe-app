@@ -6,10 +6,14 @@ import { RecipeService } from '../recipes/recipe.service';
 import { Recipe } from '../recipes/recipe.model';
 import { AuthService } from '../auth/auth.service';
 
+// TO BE REMOVED
+import { recipes as tempRecipeData } from '../recipes/recipe-data';
+import { of } from 'rxjs';
+
 @Injectable({ providedIn: 'root' })
 export class DataService {
   // recipes.json is added to the URL to prevent CORS errors
-  url: string = 'https://udemy-recipe-app-25862.firebaseio.com/recipes.json';
+  url = 'https://udemy-recipe-app-25862.firebaseio.com/recipes.json';
 
   constructor(
     private http: HttpClient,
@@ -26,13 +30,20 @@ export class DataService {
   }
 
   fetchRecipes() {
-    return this.http.get<Recipe[]>(this.url).pipe(
-      // First map is the rxjs operator; second is array method
-      map(recipes => {
-        return recipes.map(recipe => {
-          return { ...recipe, ingredients: recipe.ingredients ? recipe.ingredients : [] };
-        });
-      }),
+    // return this.http.get<Recipe[]>(this.url).pipe(
+    //   // First map is the rxjs operator; second is array method
+    //   map(recipes => {
+    //     return recipes.map(recipe => {
+    //       return { ...recipe, ingredients: recipe.ingredients ? recipe.ingredients : [] };
+    //     });
+    //   }),
+    //   tap(recipes => {
+    //     this.recipeService.setRecipes(recipes);
+    //   })
+    // );
+
+    // TO BE REMOVED
+    return of(tempRecipeData).pipe(
       tap(recipes => {
         this.recipeService.setRecipes(recipes);
       })
