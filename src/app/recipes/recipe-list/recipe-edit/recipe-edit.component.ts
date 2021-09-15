@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Params, Router } from '@angular/router';
-import { FormGroup, FormControl, FormArray, Validators } from '@angular/forms';
+import { FormGroup, FormControl, FormArray, Validators, ValidatorFn } from '@angular/forms';
 
 import { RecipeService } from '../../recipe.service';
 
@@ -43,12 +43,7 @@ export class RecipeEditComponent implements OnInit {
   }
 
   onAddIngredient() {
-    (<FormArray>this.recipeForm.get('ingredients')).push(
-      new FormGroup({
-        name: new FormControl(null, Validators.required),
-        amount: new FormControl(null, [Validators.required, Validators.pattern(/^[1-9]+[0-9]*$/)])
-      })
-    );
+    (<FormArray>this.recipeForm.get('ingredients')).push(this.addIngredientGroup());
   }
 
   onDeleteIngredient(index: number) {
@@ -75,15 +70,7 @@ export class RecipeEditComponent implements OnInit {
 
       if (recipe['ingredients']) {
         for (const ingredient of recipe.ingredients) {
-          recipeIngredients.push(
-            new FormGroup({
-              name: new FormControl(ingredient.name, Validators.required),
-              amount: new FormControl(ingredient.amount, [
-                Validators.required,
-                Validators.pattern(/^[1-9]+[0-9]*$/)
-              ])
-            })
-          );
+          recipeIngredients.push(this.addIngredientGroup(ingredient.name, ingredient.amount));
         }
       }
     }
@@ -93,6 +80,13 @@ export class RecipeEditComponent implements OnInit {
       imagePath: new FormControl(recipeImagePath, Validators.required),
       description: new FormControl(recipeDescription, Validators.required),
       ingredients: recipeIngredients
+    });
+  }
+
+  private addIngredientGroup(name: string = '', amount: number = null): FormGroup {
+    return new FormGroup({
+      name: new FormControl(name, Validators.required),
+      amount: new FormControl(amount, [Validators.required, Validators.pattern(/^[1-9]+[0-9]*$/)])
     });
   }
 }
