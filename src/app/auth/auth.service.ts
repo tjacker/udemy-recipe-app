@@ -22,8 +22,8 @@ export interface AuthResponseData {
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
-  signupUrl = 'https://www.googleapis.com/identitytoolkit/v3/relyingparty/signupNewUser?key=';
-  signinURL = 'https://www.googleapis.com/identitytoolkit/v3/relyingparty/verifyPassword?key=';
+  signupUrl = 'https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=';
+  signinURL = 'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=';
   user = new BehaviorSubject<User>(null);
   token: string;
 
