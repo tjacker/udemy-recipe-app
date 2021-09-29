@@ -7,8 +7,8 @@ import { Recipe } from '../recipes/recipe.model';
 import { AuthService } from '../auth/auth.service';
 
 // TO BE REMOVED
-import { recipes as tempRecipeData } from '../recipes/recipe-data';
-import { of } from 'rxjs';
+// import { recipes as tempRecipeData } from '../recipes/recipe-data';
+// import { of } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class DataService {
@@ -23,6 +23,17 @@ export class DataService {
 
   storeRecipes() {
     const recipes = this.recipeService.getRecipes();
+    let confirmation: boolean;
+
+    if (recipes.length === 0) {
+      confirmation = confirm(
+        'This will remove all your saved recipes. Are you sure you want to continue?'
+      );
+
+      if (!confirmation) {
+        return false;
+      }
+    }
 
     this.http.put(this.url, recipes).subscribe(response => {
       console.log(response);
@@ -30,23 +41,23 @@ export class DataService {
   }
 
   fetchRecipes() {
-    // return this.http.get<Recipe[]>(this.url).pipe(
-    //   // First map is the rxjs operator; second is array method
-    //   map(recipes => {
-    //     return recipes.map(recipe => {
-    //       return { ...recipe, ingredients: recipe.ingredients ? recipe.ingredients : [] };
-    //     });
-    //   }),
-    //   tap(recipes => {
-    //     this.recipeService.setRecipes(recipes);
-    //   })
-    // );
-
-    // TO BE REMOVED
-    return of(tempRecipeData).pipe(
+    return this.http.get<Recipe[]>(this.url).pipe(
+      // First map is the rxjs operator; second is array method
+      map(recipes => {
+        return recipes.map(recipe => {
+          return { ...recipe, ingredients: recipe.ingredients ? recipe.ingredients : [] };
+        });
+      }),
       tap(recipes => {
         this.recipeService.setRecipes(recipes);
       })
     );
+
+    // TO BE REMOVED
+    // return of(tempRecipeData).pipe(
+    //   tap(recipes => {
+    //     this.recipeService.setRecipes(recipes);
+    //   })
+    // );
   }
 }
