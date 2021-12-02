@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
 import { HttpInterceptor, HttpRequest, HttpHandler, HttpParams } from '@angular/common/http';
-import { take, exhaustMap } from 'rxjs/operators';
+import { exhaustMap, first } from 'rxjs/operators';
 
 import { AuthService } from './auth.service';
+import { User } from './user.model';
 
 @Injectable()
 export class AuthInterceptorService implements HttpInterceptor {
@@ -12,8 +13,8 @@ export class AuthInterceptorService implements HttpInterceptor {
     // Gets value once and immediately unsubscribes
     // exhaustMap waits for first user observable to complete
     return this.authService.user.pipe(
-      take(1),
-      exhaustMap(user => {
+      first(),
+      exhaustMap((user: User) => {
         // If user does not exist, pass request to next handler
         if (!user) {
           return next.handle(req);

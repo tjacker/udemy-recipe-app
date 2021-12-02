@@ -6,10 +6,6 @@ import { RecipeService } from '../recipes/recipe.service';
 import { Recipe } from '../recipes/recipe.model';
 import { AuthService } from '../auth/auth.service';
 
-// TO BE REMOVED
-// import { recipes as tempRecipeData } from '../recipes/recipe-data';
-// import { of } from 'rxjs';
-
 @Injectable({ providedIn: 'root' })
 export class DataService {
   // recipes.json is added to the URL to prevent CORS errors
@@ -52,12 +48,5 @@ export class DataService {
         this.recipeService.setRecipes(recipes);
       })
     );
-
-    // TO BE REMOVED
-    // return of(tempRecipeData).pipe(
-    //   tap(recipes => {
-    //     this.recipeService.setRecipes(recipes);
-    //   })
-    // );
   }
 }
