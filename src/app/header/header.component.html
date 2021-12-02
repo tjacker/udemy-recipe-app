@@ -1,27 +1,28 @@
 <nav class="navbar navbar-default">
   <div class="container-fluid">
     <div class="navbar-header">
-      <button type="button"
+      <button
+        type="button"
         class="navbar-toggle"
         data-toggle="collapse"
         data-target="#navbar-collapse-1"
         aria-expanded="false"
-        (click)="collapsed = !collapsed">
+        (click)="collapsed = !collapsed"
+      >
         <span class="sr-only">Toggle navigation</span>
-        <span *ngFor="let iconBar of [1, 2, 3]"
-          class="icon-bar"></span>
+        <span *ngFor="let iconBar of [1, 2, 3]" class="icon-bar"></span>
       </button>
-      <a routerLink="/"
-        class="navbar-brand">Recipe Book</a>
+      <a routerLink="/" class="navbar-brand">Recipe Book</a>
     </div>
 
-    <div id="navbar-collapse-1"
+    <div
+      id="navbar-collapse-1"
       class="navbar-collapse"
       [class.collapse]="collapsed"
-      (window:resize)="collapsed = true">
+      (window:resize)="collapsed = true"
+    >
       <ul class="nav navbar-nav">
-        <li routerLinkActive="active"
-          *ngIf="isAuthenticated">
+        <li routerLinkActive="active" *ngIf="isAuthenticated">
           <a routerLink="/recipes">Recipes</a>
         </li>
         <li routerLinkActive="active">
@@ -29,23 +30,19 @@
         </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
-        <li routerLinkActive="active"
-          *ngIf="!isAuthenticated">
+        <li routerLinkActive="active" *ngIf="!isAuthenticated">
           <a routerLink="/auth">Log In</a>
         </li>
         <li *ngIf="isAuthenticated">
-          <a style="cursor: pointer"
-            (click)="onLogout()">Log Out</a>
+          <a style="cursor: pointer" (click)="onLogout()">Log Out</a>
         </li>
-        <li class="dropdown"
-          appDropdown
-          *ngIf="isAuthenticated">
-          <a class="dropdown-toggle"
-            data-toggle="dropdown"
-            role="button">Manage <span class="caret"></span></a>
+        <li class="dropdown" appDropdown *ngIf="isAuthenticated">
+          <a class="dropdown-toggle" data-toggle="dropdown" role="button"
+            >Manage <span class="caret"></span
+          ></a>
           <ul class="dropdown-menu">
-            <li><a (click)="onSaveData()">Save Data</a></li>
             <li><a (click)="onFetchData()">Fetch Data</a></li>
+            <li><a (click)="onSaveData()">Save Data</a></li>
           </ul>
         </li>
       </ul>
