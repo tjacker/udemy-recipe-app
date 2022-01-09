@@ -4,7 +4,6 @@ import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { AuthResponseData, AuthService } from './auth.service';
 
-
 @Component({
   selector: 'app-auth',
   templateUrl: './auth.component.html',
@@ -37,7 +36,6 @@ export class AuthComponent {
 
     authObservable.subscribe(
       resData => {
-        console.log(resData);
         this.isLoading = false;
         // Forward user to recipes router after successfully logging in
         this.router.navigate(['/recipes']);
