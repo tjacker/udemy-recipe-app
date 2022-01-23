@@ -15,6 +15,8 @@ import { RecipeItemComponent } from './recipes/recipe-list/recipe-item/recipe-it
 import { RecipeListComponent } from './recipes/recipe-list/recipe-list.component';
 import { RecipeStartComponent } from './recipes/recipe-list/recipe-start/recipe-start.component';
 import { RecipesComponent } from './recipes/recipes.component';
+import { AlertContainerDirective } from './shared/alert/alert-container.directive';
+import { AlertComponent } from './shared/alert/alert.component';
 import { DropdownDirective } from './shared/dropdown.directive';
 import { LoadingIndicatorComponent } from './shared/loading-indicator/loading-indicator.component';
 import { ShoppingEditComponent } from './shopping-list/shopping-edit/shopping-edit.component';
@@ -35,6 +37,8 @@ import { ShoppingListComponent } from './shopping-list/shopping-list.component';
     AuthComponent,
     SigninComponent,
     SignupComponent,
+    AlertComponent,
+    AlertContainerDirective,
     DropdownDirective,
     LoadingIndicatorComponent
   ],
