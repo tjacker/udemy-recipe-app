@@ -14,15 +14,12 @@ import { AlertContainerDirective } from './shared/alert/alert-container.directiv
 import { AlertComponent } from './shared/alert/alert.component';
 import { DropdownDirective } from './shared/dropdown.directive';
 import { LoadingIndicatorComponent } from './shared/loading-indicator/loading-indicator.component';
-import { ShoppingEditComponent } from './shopping-list/shopping-edit/shopping-edit.component';
-import { ShoppingListComponent } from './shopping-list/shopping-list.component';
+import { ShoppingListModule } from './shopping-list/shopping-list.module';
 
 @NgModule({
   declarations: [
     AppComponent,
     HeaderComponent,
-    ShoppingListComponent,
-    ShoppingEditComponent,
     AuthComponent,
     SigninComponent,
     SignupComponent,
@@ -37,7 +34,8 @@ import { ShoppingListComponent } from './shopping-list/shopping-list.component';
     ReactiveFormsModule,
     HttpClientModule,
     AppRoutingModule,
-    RecipesModule
+    RecipesModule,
+    ShoppingListModule
   ],
   providers: [
     {
