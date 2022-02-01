@@ -10,26 +10,14 @@ import { SigninComponent } from './auth/signin/signin.component';
 import { SignupComponent } from './auth/signup/signup.component';
 import { HeaderComponent } from './header/header.component';
 import { RecipesModule } from './recipes/recipes.module';
-import { AlertContainerDirective } from './shared/alert/alert-container.directive';
-import { AlertComponent } from './shared/alert/alert.component';
-import { DropdownDirective } from './shared/dropdown.directive';
-import { LoadingIndicatorComponent } from './shared/loading-indicator/loading-indicator.component';
+import { SharedModule } from './shared/shared.module';
 import { ShoppingListModule } from './shopping-list/shopping-list.module';
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    HeaderComponent,
-    AuthComponent,
-    SigninComponent,
-    SignupComponent,
-    AlertComponent,
-    AlertContainerDirective,
-    DropdownDirective,
-    LoadingIndicatorComponent
-  ],
+  declarations: [AppComponent, HeaderComponent, AuthComponent, SigninComponent, SignupComponent],
   imports: [
     BrowserModule,
+    SharedModule,
     FormsModule,
     ReactiveFormsModule,
     HttpClientModule,
