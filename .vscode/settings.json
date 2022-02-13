@@ -1,6 +1,5 @@
 {
   "editor.formatOnSave": true,
-  "html.format.wrapAttributes": "force",
   "cSpell.ignoreWords": ["injectable", "validators"],
   "cSpell.words": ["dropdown", "minlength", "signin", "signup"]
 }
