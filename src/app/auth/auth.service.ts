@@ -1,11 +1,14 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
+import { Store } from '@ngrx/store';
 import firebase from 'firebase/app';
 import 'firebase/auth';
 import { BehaviorSubject, throwError } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
+import * as fromApp from '../store/app.reducer';
+import * as AuthActions from './store/auth.actions';
 import { User } from './user.model';
 
 export interface AuthResponseData {
@@ -23,11 +26,15 @@ export interface AuthResponseData {
 export class AuthService {
   signupUrl = 'https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=';
   signinURL = 'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=';
-  user = new BehaviorSubject<User>(null);
+  // user = new BehaviorSubject<User>(null);
   token: string;
   private tokenExpirationTimer: any;
 
-  constructor(private http: HttpClient, private router: Router) {}
+  constructor(
+    private http: HttpClient,
+    private router: Router,
+    private store: Store<fromApp.AppState>
+  ) {}
 
   signupUser(email: string, password: string) {
     firebase
@@ -42,7 +49,7 @@ export class AuthService {
         .post<AuthResponseData>(this.signupUrl + environment.apiKey, {
           email,
           password,
-          returnSecureToken: true
+          returnSecureToken: true,
         })
         // Same as .pipe(catchError(response => this.handleError(response)));
         // The returned response is automatically passed to referenced function
@@ -80,7 +87,7 @@ export class AuthService {
       .post<AuthResponseData>(this.signinURL + environment.apiKey, {
         email,
         password,
-        returnSecureToken: true
+        returnSecureToken: true,
       })
       .pipe(
         catchError(this.handleError),
@@ -102,23 +109,22 @@ export class AuthService {
       return false;
     }
 
-    const existingUser = new User(
-      userData.id,
-      userData.email,
-      userData._token,
-      new Date(userData._tokenExpiration)
-    );
+    const expirationDate = new Date(userData._tokenExpiration);
+    const existingUser = new User(userData.id, userData.email, userData._token, expirationDate);
 
     if (existingUser.token) {
+      const { id: userId, email, token } = existingUser;
       const expirationDuration =
         new Date(userData._tokenExpiration).getTime() - new Date().getTime();
-      this.user.next(existingUser);
+      // this.user.next(existingUser);
+      this.store.dispatch(new AuthActions.Login({ userId, email, token, expirationDate }));
       this.autoLogout(expirationDuration);
     }
   }
 
   logout() {
-    this.user.next(null);
+    // this.user.next(null);
+    this.store.dispatch(new AuthActions.Logout());
     this.router.navigate(['/auth']);
     localStorage.removeItem('userData');
     if (this.tokenExpirationTimer) {
@@ -146,11 +152,12 @@ export class AuthService {
     return this.token != null;
   }
 
-  private handleAuthentication(id: string, email: string, token: string, expiresIn: number) {
-    const expirationDate = new Date(new Date().getTime() + expiresIn * 1000),
-      user = new User(id, email, token, expirationDate);
+  private handleAuthentication(userId: string, email: string, token: string, expiresIn: number) {
+    const expirationDate = new Date(new Date().getTime() + expiresIn * 1000);
+    const user = new User(userId, email, token, expirationDate);
 
-    this.user.next(user);
+    // this.user.next(user);
+    this.store.dispatch(new AuthActions.Login({ userId, email, token, expirationDate }));
     this.autoLogout(expiresIn * 1000);
     localStorage.setItem('userData', JSON.stringify(user));
   }
