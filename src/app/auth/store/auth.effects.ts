@@ -5,6 +5,7 @@ import { Actions, Effect, ofType } from '@ngrx/effects';
 import { Observable, of } from 'rxjs';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
+import { User } from '../user.model';
 import * as AuthActions from './auth.actions';
 
 export interface AuthResponseData {
@@ -35,6 +36,9 @@ const handlePost = (
 const handleAuthentication = (response: AuthResponseData) => {
   const { localId: userId, email, idToken: token } = response;
   const expirationDate = new Date(new Date().getTime() + +response.expiresIn * 1000);
+  const user = new User(userId, email, token, expirationDate);
+
+  localStorage.setItem('userData', JSON.stringify(user));
 
   return new AuthActions.LoginSuccess({ userId, email, token, expirationDate });
 };
@@ -81,14 +85,6 @@ export class AuthEffects {
     })
   );
 
-  @Effect({ dispatch: false })
-  authLogout = this.actions$.pipe(
-    ofType(AuthActions.LOGOUT),
-    tap(() => {
-      this.router.navigate(['/auth']);
-    })
-  );
-
   @Effect()
   authSignup = this.actions$.pipe(
     ofType(AuthActions.SIGNUP_START),
@@ -97,6 +93,42 @@ export class AuthEffects {
         map((response: AuthResponseData) => handleAuthentication(response)),
         catchError(response => handleError(response))
       );
+    })
+  );
+
+  @Effect()
+  authAuthLogin = this.actions$.pipe(
+    ofType(AuthActions.AUTO_LOGIN),
+    map(() => {
+      const userData: User = JSON.parse(localStorage.getItem('userData'));
+      if (!userData) {
+        // Return a non-existent action to exit effect
+        return { type: 'FAKE' };
+      }
+
+      const expirationDate = new Date(userData._tokenExpiration);
+      const existingUser = new User(userData.id, userData.email, userData._token, expirationDate);
+
+      if (existingUser.token) {
+        const { id: userId, email, token } = existingUser;
+        const expirationDuration =
+          new Date(userData._tokenExpiration).getTime() - new Date().getTime();
+        // this.user.next(existingUser);
+        return new AuthActions.LoginSuccess({ userId, email, token, expirationDate });
+        // this.store.dispatch(new AuthActions.LoginSuccess({ userId, email, token, expirationDate }));
+        // this.autoLogout(expirationDuration);
+      }
+
+      return { type: 'FAKE' };
+    })
+  );
+
+  @Effect({ dispatch: false })
+  authLogout = this.actions$.pipe(
+    ofType(AuthActions.LOGOUT),
+    tap(() => {
+      localStorage.removeItem('userData');
+      this.router.navigate(['/auth']);
     })
   );
 
