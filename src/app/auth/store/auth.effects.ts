@@ -5,64 +5,10 @@ import { Actions, Effect, ofType } from '@ngrx/effects';
 import { Observable, of } from 'rxjs';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
+import { AuthResponseData } from '../auth-response.model';
+import { AuthService } from '../auth.service';
 import { User } from '../user.model';
 import * as AuthActions from './auth.actions';
-
-export interface AuthResponseData {
-  kind: string;
-  idToken: string;
-  email: string;
-  refreshToken: string;
-  expiresIn: string;
-  localId: string;
-  // Returned from signin response, but not signup
-  registered?: boolean;
-}
-
-const handlePost = (
-  authData: AuthActions.LoginStart | AuthActions.SignupStart,
-  http: HttpClient,
-  url: string
-): Observable<AuthResponseData> => {
-  const { email, password } = authData.payload;
-
-  return http.post<AuthResponseData>(url + environment.apiKey, {
-    email,
-    password,
-    returnSecureToken: true,
-  });
-};
-
-const handleAuthentication = (response: AuthResponseData) => {
-  const { localId: userId, email, idToken: token } = response;
-  const expirationDate = new Date(new Date().getTime() + +response.expiresIn * 1000);
-  const user = new User(userId, email, token, expirationDate);
-
-  localStorage.setItem('userData', JSON.stringify(user));
-
-  return new AuthActions.LoginSuccess({ userId, email, token, expirationDate });
-};
-
-const handleError = (response: any) => {
-  let errorMessage = 'An unknown error occurred.';
-
-  if (!response.error || !response.error.error) {
-    return of(new AuthActions.LoginFail(errorMessage));
-  }
-
-  switch (response.error.error.message) {
-    case 'EMAIL_EXISTS':
-      errorMessage = 'This email already exists.';
-      break;
-    case 'EMAIL_NOT_FOUND':
-      errorMessage = 'Email address does not exist.';
-      break;
-    case 'INVALID_PASSWORD':
-      errorMessage = 'The password entered was incorrect.';
-      break;
-  }
-  return of(new AuthActions.LoginFail(errorMessage));
-};
 
 @Injectable()
 export class AuthEffects {
@@ -70,9 +16,10 @@ export class AuthEffects {
   authLogin = this.actions$.pipe(
     ofType(AuthActions.LOGIN_START),
     switchMap((authData: AuthActions.LoginStart) => {
-      return handlePost(authData, this.http, environment.signinUrl).pipe(
-        map((response: AuthResponseData) => handleAuthentication(response)),
-        catchError(response => handleError(response))
+      return this.handlePost(authData, environment.signinUrl).pipe(
+        tap(response => this.authService.setLogoutTimer(+response.expiresIn * 1000)),
+        map((response: AuthResponseData) => this.handleAuthentication(response)),
+        catchError(response => this.handleError(response))
       );
     })
   );
@@ -89,9 +36,10 @@ export class AuthEffects {
   authSignup = this.actions$.pipe(
     ofType(AuthActions.SIGNUP_START),
     switchMap((signupData: AuthActions.SignupStart) => {
-      return handlePost(signupData, this.http, environment.signupUrl).pipe(
-        map((response: AuthResponseData) => handleAuthentication(response)),
-        catchError(response => handleError(response))
+      return this.handlePost(signupData, environment.signupUrl).pipe(
+        tap(response => this.authService.setLogoutTimer(+response.expiresIn * 1000)),
+        map((response: AuthResponseData) => this.handleAuthentication(response)),
+        catchError(response => this.handleError(response))
       );
     })
   );
@@ -114,6 +62,7 @@ export class AuthEffects {
         const expirationDuration =
           new Date(userData._tokenExpiration).getTime() - new Date().getTime();
         // this.user.next(existingUser);
+        this.authService.setLogoutTimer(expirationDuration);
         return new AuthActions.LoginSuccess({ userId, email, token, expirationDate });
         // this.store.dispatch(new AuthActions.LoginSuccess({ userId, email, token, expirationDate }));
         // this.autoLogout(expirationDuration);
@@ -127,10 +76,60 @@ export class AuthEffects {
   authLogout = this.actions$.pipe(
     ofType(AuthActions.LOGOUT),
     tap(() => {
+      this.authService.clearLogoutTimer();
       localStorage.removeItem('userData');
       this.router.navigate(['/auth']);
     })
   );
 
-  constructor(private actions$: Actions, private http: HttpClient, private router: Router) {}
+  constructor(
+    private actions$: Actions,
+    private http: HttpClient,
+    private router: Router,
+    private authService: AuthService
+  ) {}
+
+  private handlePost = (
+    authData: AuthActions.LoginStart | AuthActions.SignupStart,
+    url: string
+  ): Observable<AuthResponseData> => {
+    const { email, password } = authData.payload;
+
+    return this.http.post<AuthResponseData>(url + environment.apiKey, {
+      email,
+      password,
+      returnSecureToken: true,
+    });
+  };
+
+  private handleAuthentication = (response: AuthResponseData) => {
+    const { localId: userId, email, idToken: token } = response;
+    const expirationDate = new Date(new Date().getTime() + +response.expiresIn * 1000);
+    const user = new User(userId, email, token, expirationDate);
+
+    localStorage.setItem('userData', JSON.stringify(user));
+
+    return new AuthActions.LoginSuccess({ userId, email, token, expirationDate });
+  };
+
+  private handleError = (response: any) => {
+    let errorMessage = 'An unknown error occurred.';
+
+    if (!response.error || !response.error.error) {
+      return of(new AuthActions.LoginFail(errorMessage));
+    }
+
+    switch (response.error.error.message) {
+      case 'EMAIL_EXISTS':
+        errorMessage = 'This email already exists.';
+        break;
+      case 'EMAIL_NOT_FOUND':
+        errorMessage = 'Email address does not exist.';
+        break;
+      case 'INVALID_PASSWORD':
+        errorMessage = 'The password entered was incorrect.';
+        break;
+    }
+    return of(new AuthActions.LoginFail(errorMessage));
+  };
 }
