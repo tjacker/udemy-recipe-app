@@ -16,6 +16,7 @@ const initialState: AuthState = {
 export function authReducer(state: AuthState = initialState, action: AuthActions.Actions) {
   switch (action.type) {
     case AuthActions.LOGIN_START:
+    case AuthActions.SIGNUP_START:
       return {
         ...state,
         authError: null,

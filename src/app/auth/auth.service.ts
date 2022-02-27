@@ -82,7 +82,7 @@ export class AuthService {
 
   signin(email: string, password: string) {
     return this.http
-      .post<AuthResponseData>(environment.signinURL + environment.apiKey, {
+      .post<AuthResponseData>(environment.signinUrl + environment.apiKey, {
         email,
         password,
         returnSecureToken: true,

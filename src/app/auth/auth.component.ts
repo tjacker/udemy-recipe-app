@@ -1,4 +1,4 @@
-import { Component, ComponentFactoryResolver, OnInit, ViewChild } from '@angular/core';
+import { Component, ComponentFactoryResolver, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { Store } from '@ngrx/store';
 import { Observable, Subscription } from 'rxjs';
@@ -15,12 +15,13 @@ import * as fromAuth from './store/auth.reducer';
   templateUrl: './auth.component.html',
   styleUrls: ['./auth.component.css'],
 })
-export class AuthComponent implements OnInit {
+export class AuthComponent implements OnInit, OnDestroy {
   isLoginMode = true;
   isLoading = false;
   authError: string = null;
 
   private closeAlertSubscription: Subscription;
+  private storeSubscription: Subscription;
 
   @ViewChild(AlertContainerDirective, { static: false }) alertHost: AlertContainerDirective;
 
@@ -32,13 +33,22 @@ export class AuthComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.store.select('auth').subscribe((authState: fromAuth.AuthState) => {
-      this.isLoading = authState.isLoading;
-      this.authError = authState.authError;
-      if (this.authError) {
-        this.showErrorAlert(this.authError);
-      }
-    });
+    this.storeSubscription = this.store
+      .select('auth')
+      .subscribe((authState: fromAuth.AuthState) => {
+        this.isLoading = authState.isLoading;
+        this.authError = authState.authError;
+        if (this.authError) {
+          this.showErrorAlert(this.authError);
+        }
+      });
+  }
+
+  ngOnDestroy(): void {
+    if (this.closeAlertSubscription) {
+      this.closeAlertSubscription.unsubscribe();
+    }
+    this.storeSubscription.unsubscribe();
   }
 
   onSwitchMode() {
@@ -50,14 +60,15 @@ export class AuthComponent implements OnInit {
       return;
     }
     const { email, password } = form.value;
-    let authObservable: Observable<AuthResponseData>;
+    // let authObservable: Observable<AuthResponseData>;
 
     // this.isLoading = true;
     if (this.isLoginMode) {
       this.store.dispatch(new AuthActions.LoginStart({ email, password }));
       // authObservable = this.authService.signin(email, password);
     } else {
-      authObservable = this.authService.signup(email, password);
+      // authObservable = this.authService.signup(email, password);
+      this.store.dispatch(new AuthActions.SignupStart({ email, password }));
     }
 
     // authObservable.subscribe(
