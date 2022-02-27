@@ -41,30 +41,30 @@ export class AuthService {
       .catch(error => console.warn(error));
   }
 
-  signup(email: string, password: string) {
-    return (
-      this.http
-        .post<AuthResponseData>(environment.signupUrl + environment.apiKey, {
-          email,
-          password,
-          returnSecureToken: true,
-        })
-        // Same as .pipe(catchError(response => this.handleError(response)));
-        // The returned response is automatically passed to referenced function
-        .pipe(
-          catchError(this.handleError),
-          tap(response => {
-            this.handleAuthentication(
-              response.localId,
-              response.email,
-              response.idToken,
-              // Convert string to number
-              +response.expiresIn
-            );
-          })
-        )
-    );
-  }
+  // signup(email: string, password: string) {
+  //   return (
+  //     this.http
+  //       .post<AuthResponseData>(environment.signupUrl + environment.apiKey, {
+  //         email,
+  //         password,
+  //         returnSecureToken: true,
+  //       })
+  //       // Same as .pipe(catchError(response => this.handleError(response)));
+  //       // The returned response is automatically passed to referenced function
+  //       .pipe(
+  //         catchError(this.handleError),
+  //         tap(response => {
+  //           this.handleAuthentication(
+  //             response.localId,
+  //             response.email,
+  //             response.idToken,
+  //             // Convert string to number
+  //             +response.expiresIn
+  //           );
+  //         })
+  //       )
+  //   );
+  // }
 
   signinUser(email: string, password: string) {
     firebase
@@ -80,26 +80,26 @@ export class AuthService {
       .catch(error => console.warn(error));
   }
 
-  signin(email: string, password: string) {
-    return this.http
-      .post<AuthResponseData>(environment.signinUrl + environment.apiKey, {
-        email,
-        password,
-        returnSecureToken: true,
-      })
-      .pipe(
-        catchError(this.handleError),
-        tap(response => {
-          this.handleAuthentication(
-            response.localId,
-            response.email,
-            response.idToken,
-            // Convert string to number
-            +response.expiresIn
-          );
-        })
-      );
-  }
+  // signin(email: string, password: string) {
+  //   return this.http
+  //     .post<AuthResponseData>(environment.signinUrl + environment.apiKey, {
+  //       email,
+  //       password,
+  //       returnSecureToken: true,
+  //     })
+  //     .pipe(
+  //       catchError(this.handleError),
+  //       tap(response => {
+  //         this.handleAuthentication(
+  //           response.localId,
+  //           response.email,
+  //           response.idToken,
+  //           // Convert string to number
+  //           +response.expiresIn
+  //         );
+  //       })
+  //     );
+  // }
 
   autoLogin() {
     const userData: User = JSON.parse(localStorage.getItem('userData'));
