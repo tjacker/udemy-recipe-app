@@ -4,7 +4,6 @@ import { Observable } from 'rxjs';
 import { first, map } from 'rxjs/operators';
 import * as fromAuth from '../auth/store/auth.reducer';
 import * as fromApp from '../store/app.reducer';
-import { AuthService } from './auth.service';
 import { User } from './user.model';
 import {
   ActivatedRouteSnapshot,
@@ -16,11 +15,7 @@ import {
 
 @Injectable({ providedIn: 'root' })
 export class AuthGuard implements CanActivate {
-  constructor(
-    private authService: AuthService,
-    private router: Router,
-    private store: Store<fromApp.AppState>
-  ) {}
+  constructor(private router: Router, private store: Store<fromApp.AppState>) {}
 
   canActivate(
     route: ActivatedRouteSnapshot,
@@ -39,18 +34,5 @@ export class AuthGuard implements CanActivate {
         return this.router.createUrlTree(['/auth']);
       })
     );
-
-    // return this.authService.user.pipe(
-    //   first(),
-    //   map((user: User) => {
-    //     const isAuth = !!user;
-
-    //     if (isAuth) {
-    //       return true;
-    //     }
-
-    //     return this.router.createUrlTree(['/auth']);
-    //   })
-    // );
   }
 }

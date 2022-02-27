@@ -7,10 +7,8 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { AuthInterceptorService } from './auth/auth-interceptor.service';
 import { AuthEffects } from './auth/store/auth.effects';
-import { authReducer } from './auth/store/auth.reducer';
 import { HeaderComponent } from './header/header.component';
 import { SharedModule } from './shared/shared.module';
-import { shoppingListReducer } from './shopping-list/store/shopping-list.reducer';
 import * as fromApp from './store/app.reducer';
 
 @NgModule({

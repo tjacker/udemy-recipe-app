@@ -4,12 +4,11 @@ import { Store } from '@ngrx/store';
 import { exhaustMap, first, map } from 'rxjs/operators';
 import * as fromAuth from '../auth/store/auth.reducer';
 import * as fromApp from '../store/app.reducer';
-import { AuthService } from './auth.service';
 import { User } from './user.model';
 
 @Injectable()
 export class AuthInterceptorService implements HttpInterceptor {
-  constructor(private authService: AuthService, private store: Store<fromApp.AppState>) {}
+  constructor(private store: Store<fromApp.AppState>) {}
 
   intercept(req: HttpRequest<any>, next: HttpHandler) {
     // Gets value once and immediately unsubscribes
@@ -29,20 +28,5 @@ export class AuthInterceptorService implements HttpInterceptor {
         return next.handle(modifiedReq);
       })
     );
-
-    // return this.authService.user.pipe(
-    //   first(),
-    //   exhaustMap((user: User) => {
-    //     // If user does not exist, pass request to next handler
-    //     if (!user) {
-    //       return next.handle(req);
-    //     }
-
-    //     const modifiedReq = req.clone({
-    //       params: new HttpParams().set('auth', user.token),
-    //     });
-    //     return next.handle(modifiedReq);
-    //   })
-    // );
   }
 }
